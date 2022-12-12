@@ -38,13 +38,11 @@ public class Day10 {
         if((cycle - 20) % 40 == 0 ){
             answer += (cycle * register);
        }
-        if((cycle - 1) % 40 == 0) System.out.println();
         if(cycle % 40  >= register &&  cycle % 40 < register + 3){
             System.out.print("#");
         } else {
             System.out.print(".");
         }
-   //    System.out.println( register);
-
+        if(cycle % 40 == 0) System.out.println();
     }
 }
