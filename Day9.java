@@ -78,11 +78,7 @@ public class Day9 {
                 posX[loop] += (posX[loop - 1] - posX[loop]) / 2;
             }
             if(Math.abs(posY[loop - 1] - posY[loop]) > 1){
-                if(Math.abs(posX[loop] - posX[loop - 1]) > 1) {
-                    posX[loop] = (posX[loop - 1] - posX[loop])/ 2;
-                } else {
-                    posX[loop] = posX[loop - 1];
-                }
+                posX[loop] = posX[loop - 1];
                 posY[loop] += (posY[loop - 1] - posY[loop]) / 2;
             }
             tail[posX[loop]][posY[loop]][loop] = true;

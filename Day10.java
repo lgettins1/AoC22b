@@ -9,8 +9,6 @@ public class Day10 {
 
     public static void main(String [] args) {
         String thisLine;
-
-
         try {
             BufferedReader br = new BufferedReader(new FileReader("c:/users/lance/documents/AoC22Day10input.txt"));
             while ((thisLine = br.readLine()) != null) {
