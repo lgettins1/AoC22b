@@ -15,7 +15,7 @@ public class Day12 {
         int steps = 0;
 
         try {
-            BufferedReader br = new BufferedReader(new FileReader("c:/users/lance/documents/AoC22Day12inputb.txt"));
+            BufferedReader br = new BufferedReader(new FileReader("c:/users/lance/documents/AoC22Day12input.txt"));
             while ((thisLine = br.readLine()) != null) {
                 width = thisLine.length();
                 for(int col = 0; col < width; col ++){
