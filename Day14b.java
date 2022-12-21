@@ -8,9 +8,7 @@ public class Day14b {
     public static int minx = 300;
     public static int maxy = 169;
     public static int miny = 0;
- //public static int maxx = 520;
- //public static int minx = 480;
- //public static int maxy = 11;
+
     public static char[][]cave = new char[maxx + 1][maxy + 1];
 
 
