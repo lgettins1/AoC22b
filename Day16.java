@@ -15,7 +15,7 @@ public class Day16 {
         String thisLine;
         int maxTunnels = 0;
         List<String> scan = new ArrayList<>();
-        List<Integer> openValves = new ArrayList<>();
+        String openValves = "[]";
         int minutes = 0;
         int firstValve = 0;
         int currentFlow = 0;
@@ -51,17 +51,24 @@ public class Day16 {
         e.printStackTrace();
         }
     }
-    public static void decide(int valveNo, int minutes, List<Integer> openValves, int currentFlow){
+    public static void decide(int valveNo, int minutes, String openValves, int currentFlow){
         minutes ++;
-        for (Integer vl : openValves) {
+        String[] t = (openValves.substring(1, openValves.length() - 1)).split(",");
+        List <Integer> vList = new ArrayList<>();
+        if(t[0].length() > 0 ) {
+            for (String s : t) {
+                vList.add(Integer.parseInt(s));
+            }
+        }
+        for (Integer vl : vList) {
             currentFlow += Integer.parseInt(scanInfo[vl][1]);
         }
-        System.out.println(minutes + " " + scanInfo[valveNo][0] + " " + openValves + " " + bestFlow);
+        System.out.println(minutes + " " + scanInfo[valveNo][0] + " " + vList + " " + vList.size() + " " + bestFlow);
         if (minutes >= 30) {
             if(currentFlow > bestFlow) bestFlow = currentFlow;
 
         } else {
-            boolean open = openValves.contains(valveNo);
+            boolean open = vList.contains(valveNo);
             if(open){
                 for(int tunnels = 0; tunnels < Integer.parseInt(scanInfo[valveNo][2]); tunnels ++){
                     for(int ft = 0; ft < valves; ft ++){
@@ -73,10 +80,19 @@ public class Day16 {
             } else {
                 for (int tunnels = 0; tunnels <= Integer.parseInt(scanInfo[valveNo][2]); tunnels++) {
                     if (tunnels == 0) {
-                        openValves.add(valveNo);
-                        decide(valveNo, minutes, openValves, currentFlow);
+                        if(Integer.parseInt(scanInfo[valveNo][1]) > 0) {
+                            vList.add(valveNo);
+                            StringBuilder newValves = new StringBuilder("[");
+                            for (Integer integer : vList) {
+                                newValves.append(integer);
+                                newValves.append(",");
+                            }
+                            newValves = new StringBuilder(newValves.substring(0, newValves.length() - 1));
+                            newValves.append("]");
+                            decide(valveNo, minutes, newValves.toString(), currentFlow);
+                        }
                     } else {
-                        for (int ft = 0; ft < valves; ft++) {
+                       for (int ft = 0; ft < valves; ft++) {
                             if (tunnelList[valveNo][tunnels - 1].equals(scanInfo[ft][0])) {
                                 decide(ft, minutes, openValves, currentFlow);
                             }
