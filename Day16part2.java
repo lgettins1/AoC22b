@@ -3,7 +3,7 @@ import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Day16attempt2 {
+public class Day16part2 {
     public static String[][] tunnelList = new String[61][5];
     public static String[][] scanInfo = new String[61][3];
     public static String[][] routes = new String[225][3];
@@ -62,14 +62,13 @@ public class Day16attempt2 {
                 }
             }
 
-            String routeSoFar = "AA";
             StringBuilder remaining = new StringBuilder();
             for(int a = 1; a <=usefulValves; a ++) {
                 remaining.append(ends[a]).append(",");
             }
             remaining = new StringBuilder(remaining.substring(0, remaining.length() - 1));
             for(int a = 1; a <= usefulValves; a ++){
-                calcFlow("AA", ends[a], 0, routeSoFar, remaining.toString(), 0, 0);
+                calcFlow("AA", ends[a], 0, "AA", remaining.toString(), 0, 0);
 
             }
 
@@ -123,15 +122,14 @@ public class Day16attempt2 {
         for(int aa = 0; aa < routeCount; aa ++){
             if((routes[aa][0].equals(a) && routes[aa][1].equals(b)) ||
                     (routes[aa][1].equals(a) && routes[aa][0].equals(b))){
-
-                time += Integer.parseInt(routes[aa][2]);
-                totalFlow += flowRate * (Integer.parseInt(routes[aa][2]) + 1);
+                int elapsed = Integer.parseInt(routes[aa][2]) + 1;
+                time += elapsed;
+                totalFlow += flowRate * elapsed;
                 break;
             }
         }
         int oldFlowRate = flowRate;
         flowRate += Integer.parseInt(scanInfo[bIndex][1]);
-        time ++;
         List<String> ends = new ArrayList<>();
         StringBuilder newRemaining = new StringBuilder();
         String[] rValves = remaining.split(",");
@@ -141,23 +139,56 @@ public class Day16attempt2 {
                 ends.add(rVal);
             }
         }
-        if(ends.size() > 0 && time < 30) {
-            remaining = newRemaining.substring(0, newRemaining.length() - 1);
-        } else {
 
-            totalFlow += (30 - time ) * oldFlowRate;
-            if(totalFlow > bestFlow) {
-                bestFlow = totalFlow;
-                System.out.println("Best route so far " + route + " " + totalFlow);
+        remaining = newRemaining.substring(0, newRemaining.length() - 1);
+
+            if(time < 26) {
+                for (String thisValve : ends) {
+                    calcFlow(b, thisValve, time, route, remaining, flowRate, totalFlow);
+                }
+            } else {
+            totalFlow += (26 - time ) * oldFlowRate;
+            for(String thisValve : ends) {
+                elephantFlow("AA", thisValve, totalFlow, route, 0, "AA", remaining, 0, 0);
             }
-       }
-        if(time < 30) {
+        }
+    }
+
+    public static void elephantFlow(String a, String b, int meFlow, String meRoute, int time, String route, String remaining, int flowRate, int totalFlow){
+        route += "->" + b;
+        int bIndex = getPos(b);
+        for(int aa = 0; aa < routeCount; aa ++){
+            if((routes[aa][0].equals(a) && routes[aa][1].equals(b)) ||
+                    (routes[aa][1].equals(a) && routes[aa][0].equals(b))){
+                int elapsed = Integer.parseInt(routes[aa][2]) + 1;
+                time += elapsed;
+                totalFlow += flowRate * elapsed;
+                break;
+            }
+        }
+        int oldFlowRate = flowRate;
+        flowRate += Integer.parseInt(scanInfo[bIndex][1]);
+        List<String> ends = new ArrayList<>();
+        StringBuilder newRemaining = new StringBuilder();
+        String[] rValves = remaining.split(",");
+        for (String rVal : rValves) {
+            if (!rVal.equals(b)) {
+                newRemaining.append(rVal).append(",");
+                ends.add(rVal);
+            }
+        }
+        if(ends.size() > 0 && time < 26) {
+            remaining = newRemaining.substring(0, newRemaining.length() - 1);
             for (String thisValve : ends) {
-                calcFlow(b, thisValve, time, route, remaining, flowRate, totalFlow);
+                elephantFlow(b, thisValve, meFlow, meRoute, time, route, remaining, flowRate, totalFlow);
+            }
+        } else {
+            totalFlow += (26 - time) * oldFlowRate;
+            if(totalFlow + meFlow > bestFlow) {
+                bestFlow = totalFlow + meFlow;
+                System.out.println("Best route so far " + meRoute + " " + meFlow +
+                        " and elephant " + route + " " + totalFlow + " = " + bestFlow);
             }
         }
     }
 }
-
-
-
