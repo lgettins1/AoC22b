@@ -14,7 +14,6 @@ public class Day17part2 {
         String thisLine = br.readLine();
         int[] towerRow = new int[20000];
         int[] blockHeight = new int [20000];
-
         ArrayList<String>[] shapes = new ArrayList[5];
         for (int i = 0; i < 5; i++) {
             shapes[i] = new ArrayList<>();
@@ -100,9 +99,14 @@ public class Day17part2 {
         int firstBlock = 200;
         int blockInterval = 0;
         int a = 0;
+        int[]heightCompare = new int[40];
+        for(int b = 0; b < 40; b ++){
+            heightCompare[b] = blockHeight[firstBlock + b] + repeatInterval;
+        }
         while(blockInterval == 0){
-            if(blockHeight[firstBlock] + repeatInterval == blockHeight[firstBlock + a] &&
-                    blockHeight[firstBlock + 3] + repeatInterval == blockHeight[firstBlock + a + 3]){
+            int[] heightScan = new int[40];
+            System.arraycopy(blockHeight, firstBlock + a, heightScan,0, 40);
+            if(Arrays.equals(heightCompare, heightScan)){
                 blockInterval = a;
             }
             a ++;
@@ -110,11 +114,11 @@ public class Day17part2 {
         System.out.println();
         System.out.println("The pattern repeats every " + repeatInterval + " rows, which is every "
                 + blockInterval + " blocks.");
-        double loops = Math.floor(target / blockInterval);
+        double loops = Math.floor((double)(target / blockInterval));
         int extraBit = (int)(target - (long)(loops * blockInterval));
         target = (long)(loops * repeatInterval) + (long) blockHeight[extraBit];
         System.out.println("Therefore the loops account for " + (long)(loops * repeatInterval) + " and then we need to add ");
-        System.out.println(extraBit + " for the blocks before the loops, and the blocks up to 1000000000000");
+        System.out.println( "the height due to the " + extraBit + " blocks for 1000000000000");
         System.out.println();
         System.out.println("The total height will be " + target);
 
